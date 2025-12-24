@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vietnam Surftrip - Mui Ne</title>
+    <!-- Nhúng Font Roboto và Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. GLOBAL & VARIABLES --- */
+        :root {
+            --wp--style--global--content-size: 823px;
+            --wp--style--global--wide-size: 1080px;
+            --primary-brush-color: rgb(0, 208, 130);
+            --header-height-expanded: 115px;
+            --header-height-collapsed: 70px;
+            --font-main: 'Roboto', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            color: #252525;
+            line-height: 1.6;
+            background-color: #fff;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        img { max-width: 100%; display: block; }
+
+        /* --- 2. HEADER --- */
+        header {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: var(--header-height-expanded);
+            background-color: #fff;
+            z-index: 1000;
+            transition: height 0.3s ease-in-out, box-shadow 0.3s ease;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex; align-items: center; justify-content: center;
+        }
+        header.scrolled {
+            height: var(--header-height-collapsed);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header-container {
+            width: 100%;
+            max-width: var(--wp--style--global--wide-size);
+            padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            height: 100%;
+        }
+        
+                .logo a {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            /* Chiều cao mặc định khi ở đầu trang */
+            height: 60px; 
+            width: auto; /* Tự động chỉnh chiều rộng theo tỷ lệ */
+            transition: height 0.3s ease; /* Hiệu ứng thu nhỏ mượt mà */
+            display: block;
+        }
+
+        /* Khi cuộn trang (Header thu nhỏ), Logo cũng nhỏ lại */
+        header.scrolled .logo img {
+            height: 40px; 
+        }
+
+        /* --- CẬP NHẬT CSS CHO HERO VIDEO FULLSCREEN --- */
+        .hero-section {
+            width: 100%; 
+            height: 100vh; /* Full chiều cao màn hình */
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            /* Xóa padding cũ để video tràn viền */
+            padding: 0; 
+            position: relative; /* Để video absolute bám theo */
+            overflow: hidden;
+            background-color: #000; /* Màu nền dự phòng nếu video lỗi */
+            margin-top: 0; /* Reset margin top cũ nếu cần xử lý video full trùm header (tuỳ chọn) */
+            /* Nếu muốn video nằm DƯỚI header (như cũ), giữ nguyên margin-top */
+            margin-top: var(--header-height-expanded); 
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* QUAN TRỌNG: Cắt video để lấp đầy khung mà không bị méo */
+            z-index: 0; /* Nằm dưới cùng */
+        }
+        
+        /* Nếu sau này bạn muốn viết chữ đè lên video thì dùng class này */
+        .hero-content-overlay {
+            position: relative;
+            z-index: 1; /* Nằm trên video */
+            color: white;
+            text-align: center;
+        }
+
+        .desktop-menu { display: flex; align-items: center; gap: 30px; }
+        .nav-list { display: flex; gap: 25px; align-items: center; }
+        .nav-item a {
+            text-transform: uppercase; font-weight: 300; font-size: 14px;
+            transition: font-weight 0.1s ease; position: relative; display: inline-block; text-align: center;
+        }
+        .nav-item a::before {
+            display: block; content: attr(title); font-weight: 700; height: 0; overflow: hidden; visibility: hidden;
+        }
+        .nav-item a:hover { font-weight: 700; }
+        .nav-item.highlight a {
+            position: relative; padding: 5px 10px; color: #fff; z-index: 1;
+        }
+        .nav-item.highlight a::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--primary-brush-color); z-index: -1;
+            clip-path: polygon(3% 10%, 98% 5%, 100% 88%, 95% 95%, 2% 98%, 0% 15%);
+            transform: scale(1.1) rotate(-1deg); border-radius: 4px; transition: transform 0.2s;
+        }
+        .nav-item.highlight a:hover::after { transform: scale(1.15) rotate(0deg); }
+        
+        /* Lang Switcher */
+        .lang-switcher { position: relative; display: flex; align-items: center; cursor: pointer; font-weight: 300; font-size: 14px; gap: 5px; padding: 10px 0; }
+        .lang-current { display: flex; align-items: center; gap: 5px; }
+        .lang-current:hover { font-weight: 700; }
+        .icon { width: 16px; height: 16px; fill: black; }
+        .dropdown-menu {
+            position: absolute; top: 100%; right: 0; background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 4px; padding: 10px 0;
+            min-width: 80px; opacity: 0; visibility: hidden; transform: translateY(10px);
+            transition: all 0.3s ease; text-align: center;
+        }
+        .lang-switcher:hover .dropdown-menu, .lang-switcher.active .dropdown-menu {
+            opacity: 1; visibility: visible; transform: translateY(0);
+        }
+        .dropdown-item { display: block; padding: 8px 15px; font-size: 14px; font-weight: 300; transition: background 0.2s; }
+        .dropdown-item:hover { background-color: #f5f5f5; font-weight: 700; }
+
+        /* Mobile Controls */
+        .mobile-controls { display: none; align-items: center; gap: 15px; }
+        .hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 4px; width: 24px; }
+        .line { width: 100%; height: 2px; background-color: black; transition: all 0.3s ease; }
+        .mobile-menu-overlay {
+            position: fixed; top: var(--header-height-expanded); left: 0; width: 100%;
+            background-color: white; height: 0; overflow: hidden;
+            transition: height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; padding-top: 0; z-index: 999;
+        }
+        header.scrolled ~ .mobile-menu-overlay { top: var(--header-height-collapsed); }
+        .mobile-menu-overlay.active { height: 300px; padding-top: 20px; border-bottom: 1px solid #eee; }
+        .mobile-nav-list { display: flex; flex-direction: column; gap: 20px; text-align: center; width: 100%; }
+        .mobile-nav-list li a { font-size: 16px; text-transform: uppercase; display: block; padding: 10px; }
+        .hamburger.active .line:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+        .hamburger.active .line:nth-child(2) { opacity: 0; }
+        .hamburger.active .line:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+        /* --- 3. HERO SECTION --- */
+        .hero-section {
+            width: 100%; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background-color: #f9f9f9;
+            margin-top: var(--header-height-expanded);
+            padding: 20px; overflow: hidden;
+        }
+        .hero-image {
+            max-width: 100%; max-height: 80vh; object-fit: contain;
+        }
+
+        /* --- 4. SECTION: ABOUT (UPDATED from DevTools) --- */
+        .section-about {
+            width: 100%;
+            padding: 100px 0;
+            display: flex;
+            justify-content: center;
+            background-color: #fff;
+            overflow: hidden;
+            color: #252525;
+        }
+
+        .container-wide {
+            width: 80%; /* Updated */
+            max-width: 1600px; /* Updated */
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr; /* Updated */
+            gap: 0;
+            align-items: center;
+        }
+
+        /* About Text Styles */
+        .about-text {
+            position: relative;
+            z-index: 10;
+            margin-right: -180px; /* Updated: Deep overlap */
+            padding-right: 20px;
+        }
+
+        .about-text h2 {
+            font-size: 75px; /* Updated */
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            color: #2b2b2b; /* Updated color */
+        }
+
+        .about-text h3 {
+            font-size: 16px;
+            letter-spacing: 4px;
+            color: var(--primary-brush-color);
+            margin-bottom: 50px;
+            text-transform: uppercase;
+            font-weight: 900;
+        }
+
+        .text-content-wrapper {
+            margin-left: 90px; /* Updated indent */
+        }
+
+        .about-text p {
+            font-family: var(--font-serif);
+            font-size: 19px;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            color: #2d2d2d; /* Updated color */
+            text-align: left; /* Updated alignment */
+            font-weight: 600;
+        }
+
+        /* Image Area & SVG Styles (Giữ logic cũ nhưng update theo context mới) */
+        .about-images {
+            position: relative;
+            width: 100%;
+            padding-left: 50px; /* Padding bù lại cho phần text đè vào */
+        }
+
+/* --- CẬP NHẬT CSS CHO PHẦN IMAGE WRAPPER --- */
+        
+        .img-wrapper {
+            position: relative;
+            width: 100%;
+            height: auto;
+            /* Tăng chiều cao tối thiểu lên để chứa đủ 2 ảnh dọc và ngang */
+            min-height: 700px; 
+        }
+
+        .img-back {
+            position: absolute;
+            top: 0;
+            right: 0;
+            /* Giảm độ rộng ảnh sau xuống khoảng 55-60% để chừa khoảng trống bên trái */
+            width: 58%; 
+            height: auto;
+            z-index: 1;
+            object-fit: cover;
+        }
+
+        .img-front {
+            position: absolute; /* Đổi từ relative sang absolute để căn chỉnh chính xác */
+            top: auto;          /* Xóa bỏ thuộc tính top: 390px cũ */
+            bottom: 10px;       /* Căn ảnh cách đáy container 60px */
+            left: 0;            /* Căn sát lề trái */
+            /* Ảnh trước nên rộng hơn một chút để tạo độ phủ */
+            width: 68%;         
+            height: auto;
+            z-index: 2;
+            /* Thêm bóng đổ nhẹ để làm nổi bật sự tách lớp giữa 2 ảnh */
+        }
+
+        /* SVG Drawings */
+        .hand-drawn-svg {
+            position: absolute;
+            pointer-events: none;
+            z-index: 3;
+            fill: #252525;
+            width: 140px;
+            height: auto;
+        }
+
+        .svg-top-right {
+            top: -40px;
+            right: -20px;
+            width: 200px;
+            transform: rotate(5deg);
+        }
+
+        .svg-bottom-left {
+            bottom: -30px;
+            left: -40px;
+            width: 160px;
+            transform: rotate(-5deg);
+        }
+
+        /* --- 6. SECTION: BENEFITS --- */
+        .section-benefits {
+            width: 100%;
+            padding: 120px 20px;
+            background-color: #f8f9fa; /* Màu xám hiện đại nhẹ nhàng */
+            display: flex;
+            justify-content: center;
+        }
+
+        .benefits-container {
+            width: 100%;
+            max-width: var(--wp--style--global--wide-size); /* Giới hạn độ rộng chuẩn 1080px */
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 cột bằng nhau */
+            gap: 50px;
+        }
+
+        .benefit-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Căn giữa nội dung */
+            text-align: center;
+            padding: 40px 30px;
+            background: #ffffff;
+            border-radius: 8px;
+            /* Bóng đổ nhẹ tạo độ nổi */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03); 
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid transparent;
+        }
+
+        /* Hover Effect: Card lift up & Shadow & Border */
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border-color: rgba(0, 208, 130, 0.3);
+        }
+
+        /* Icon Styling */
+        .icon-box {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(0, 208, 130, 0.1); /* Màu xanh nhạt */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            color: var(--primary-brush-color);
+        }
+
+        .benefit-card:hover .icon-box {
+            background-color: var(--primary-brush-color);
+            color: #fff;
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .benefit-icon {
+            width: 36px;
+            height: 36px;
+        }
+
+        /* Text Styling */
+        .benefit-card h3 {
+            font-family: var(--font-serif);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #252525;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .benefit-card p {
+            font-family: var(--font-main);
+            font-size: 15px;
+            color: #666;
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        /* --- Scroll Animation Classes --- */
+        .hidden-element {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        
+        .hidden-element.show {
+            opacity: 1;
+            transform: translateY(0);
+            /* Sử dụng biến CSS delay đã gán trong HTML để animation chạy lần lượt */
+            transition-delay: var(--delay); 
+        }
+        
+        /* --- 7. SECTION: GALLERY CTA --- */
+        .section-gallery-cta {
+            width: 100%;
+            padding: 100px 20px;
+            background-color: #ffffff; /* Nền trắng tinh */
+            display: flex;
+            justify-content: center;
+        }
+
+        .cta-container {
+            width: 100%;
+            max-width: var(--wp--style--global--wide-size);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Image Layout */
+        .cta-images-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Chia đôi song song */
+            gap: 40px; /* Khoảng cách giữa 2 ảnh */
+            width: 100%;
+            margin-bottom: 60px;
+        }
+
+        .cta-img-box {
+            width: 100%;
+            aspect-ratio: 1 / 1; /* Giữ khung hình vuông 707x707 */
+            overflow: hidden;
+            position: relative;
+        }
+
+        .cta-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        /* Hiệu ứng zoom nhẹ khi di chuột vào ảnh */
+        .cta-img-box:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Text Content */
+        .cta-text-content {
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .cta-text-content p {
+            font-family: var(--font-serif); /* Font Playfair Display */
+            font-size: 22px;
+            line-height: 1.6;
+            color: #000000;
+            margin-bottom: 40px;
+            font-style: italic; /* Chữ nghiêng nhẹ tạo cảm giác thôi thúc */
+        }
+
+        /* --- Custom Brush Underline Button --- */
+        .btn-book-brush {
+            font-family: var(--font-serif);
+            font-size: 30px;
+            font-weight: 900;
+            color: #000;
+            text-transform: uppercase;
+            position: relative;
+            padding-bottom: 5px;
+            display: inline-block;
+            letter-spacing: 2px;
+            transition: color 0.3s ease;
+        }
+
+        /* Tạo nét cọ (Brush Stroke) bằng pseudo-element */
+        .btn-book-brush::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px; /* Nằm dưới chữ một chút */
+            width: 0%; /* Ẩn ban đầu */
+            height: 12px; /* Độ dày nét cọ */
+            background-color: var(--primary-brush-color);
+            
+            /* Tạo hình dáng nét cọ nguệch ngoạc */
+            clip-path: polygon(
+                0% 45%, 5% 40%, 10% 45%, 20% 40%, 30% 50%, 40% 40%, 
+                50% 55%, 60% 40%, 70% 50%, 80% 45%, 90% 55%, 100% 40%, 
+                100% 70%, 90% 80%, 80% 70%, 70% 80%, 60% 70%, 50% 85%, 
+                40% 75%, 30% 85%, 20% 75%, 10% 80%, 0% 70%
+            );
+            
+            transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Hiệu ứng chạy mượt */
+            opacity: 0.8;
+            z-index: -1;
+        }
+
+        .btn-book-brush:hover::after {
+            width: 100%; /* Hiện full nét cọ khi hover */
+        }
+
+        /* --- 8. SECTION: SUSTAINABILITY (HORIZONTAL SCROLL) --- */
+        .section-sustainability {
+            width: 100%;
+            padding: 80px 0;
+            background-color: #f4f4f4; /* Màu nền hơi xám nhẹ để tách biệt */
+            overflow: hidden; /* Ẩn thanh cuộn mặc định xấu xí */
+        }
+
+        .scroll-container {
+            display: flex;
+            gap: 60px; /* Khoảng cách giữa các cột */
+            overflow-x: auto;
+            padding: 0 5vw; /* Padding 2 bên */
+            cursor: grab; /* Con trỏ hình bàn tay */
+            scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
+            align-items: center; /* Căn giữa theo chiều dọc */
+            height: 800px; /* Chiều cao cố định cho khu vực scroll */
+        }
+        
+        .scroll-container::-webkit-scrollbar {
+            display: none; /* Ẩn thanh cuộn trên Chrome/Safari */
+        }
+
+        .scroll-container:active {
+            cursor: grabbing; /* Con trỏ nắm tay khi kéo */
+        }
+
+        /* --- Items Configuration --- */
+        .scroll-item {
+            flex-shrink: 0; /* Không cho phép co lại */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* 1. Text Intro Block */
+        .text-intro {
+            width: 400px;
+            padding-right: 40px;
+        }
+        .main-desc {
+            font-family: var(--font-main);
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 40px;
+        }
+        .drag-instruction {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            opacity: 0.6;
+        }
+        .drag-icon svg { width: 50px; height: auto; animation: slideRight 1.5s infinite; }
+        .drag-instruction p { font-size: 12px; letter-spacing: 2px; font-weight: 700; }
+        
+        @keyframes slideRight {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        /* 2. Image Blocks */
+        .landscape { width: 700px; }
+        .portrait { width: 450px; }
+
+        .image-wrapper {
+            width: 100%;
+            height: auto;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .image-wrapper img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+        }
+        .portrait .image-wrapper { height: 600px; }
+        .landscape .image-wrapper { height: 450px; }
+
+        /* 3. Post-it Notes Style (Giả lập giấy ghi chú) */
+        .post-it-note {
+            position: absolute;
+            background-color: #fff;
+            padding: 25px;
+            width: 300px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            z-index: 10;
+        }
+        .post-it-note p {
+            font-family: var(--font-serif); /* Playfair Display */
+            font-size: 16px;
+            line-height: 1.5;
+            color: #000;
+            font-style: italic;
+        }
+        
+        /* Vị trí và góc xoay của Post-it */
+        .note-bottom-right { bottom: -30px; right: -20px; }
+        .note-bottom-left { bottom: -30px; left: -20px; }
+        .note-top-left { top: 40px; left: -40px; }
+        .note-top-right { top: 40px; right: -40px; }
+
+        .rotate-right { transform: rotate(2deg); }
+        .rotate-left { transform: rotate(-2deg); }
+
+        /* 4. Text Final Block & Button */
+        .text-final {
+            width: 350px;
+            text-align: center;
+            align-items: center;
+        }
+        .text-final p {
+            font-family: var(--font-serif);
+            font-size: 20px;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .circle-btn {
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            border: 1px solid #000;
+            display: flex; justify-content: center; align-items: center;
+            text-align: center;
+            font-weight: 700; font-size: 14px; letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .circle-btn:hover {
+            background-color: var(--primary-brush-color);
+            border-color: var(--primary-brush-color);
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .scroll-container { 
+                height: auto; 
+                flex-direction: column; /* Trên mobile xếp dọc cho dễ xem */
+                overflow-x: hidden;
+                padding: 40px 20px;
+                gap: 80px;
+            }
+            .scroll-item { width: 100% !important; align-items: center; }
+            .post-it-note { position: relative; top: auto; left: auto; right: auto; bottom: auto; margin-top: -20px; transform: rotate(0) !important; }
+            .drag-instruction { display: none; }
+            .portrait .image-wrapper, .landscape .image-wrapper { height: auto; aspect-ratio: 3/4; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cta-images-wrapper {
+                grid-template-columns: 1fr; /* Mobile xếp dọc */
+                gap: 20px;
+            }
+            .cta-text-content p {
+                font-size: 18px;
+            }
+            .btn-book-brush {
+                font-size: 24px;
+            }
+        }
+        /* --- Responsive Benefits --- */
+        @media (max-width: 900px) {
+            .section-benefits { padding: 80px 20px; }
+            .benefits-container {
+                grid-template-columns: 1fr; /* Chuyển thành 1 cột */
+                gap: 30px;
+                max-width: 500px; /* Giới hạn chiều rộng trên mobile cho đẹp */
+            }
+            .benefit-card {
+                padding: 30px 20px;
+                /* Reset transform hover trên mobile để tránh lỗi chạm */
+            }
+            .benefit-card:hover { transform: none; }
+        }
+
+        /* --- 5. RESPONSIVE ADJUSTMENTS --- */
+        @media (max-width: 1200px) {
+            .about-text h2 { font-size: 55px; }
+            .about-text { margin-right: -100px; } 
+            .text-content-wrapper { margin-left: 50px; }
+        }
+
+        @media (max-width: 900px) {
+            .container-wide { 
+                grid-template-columns: 1fr; /* Stack cột */
+                gap: 50px; 
+                width: 90%; 
+            }
+            
+            /* Reset các style desktop phức tạp cho mobile */
+            .about-text { margin-right: 0; padding-right: 0; text-align: left; }
+            .text-content-wrapper { margin-left: 0; }
+            .about-images { padding-left: 0; margin-top: 30px; }
+            
+            .about-text h2 { font-size: 45px; }
+            .about-text p { text-align: justify; } /* Mobile có thể justify cho đẹp hơn */
+            
+            .img-wrapper { min-height: 450px; }
+        }
+
+        @media (max-width: 768px) {
+            .desktop-menu { display: none; }
+            .mobile-controls { display: flex; }
+            .lang-switcher.desktop-only { display: none; }
+            .hero-section {
+                margin-top: var(--header-height-expanded); 
+                height: calc(100vh - var(--header-height-expanded));
+            }
+
+            .section-about { padding: 60px 0; }
+            .about-text { order: 1; }
+            .about-images { order: 2; }
+            
+            .about-text h2 { font-size: 40px; }
+            .about-text p { font-size: 17px; }
+
+            .img-wrapper {
+                min-height: 450px; /* Giảm chiều cao wrapper trên mobile */
+            }
+            .img-back {
+                width: 70%; /* Ảnh sau to hơn chút trên mobile */
+            }
+            .img-front {
+                width: 75%;
+                bottom: 20px;
+            }
+            .svg-top-right { width: 120px; top: -30px; right: -20px; }
+            .svg-bottom-left { width: 100px; bottom: -20px; left: -20px; }
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header id="main-header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="#">
+                    <!-- Thay link ảnh của bạn vào src bên dưới -->
+                    <img src="https://scontent.fsgn2-9.fna.fbcdn.net/v/t39.30808-6/511071638_122211521756116872_3227246048032558223_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=vulpcKhnbocQ7kNvwGjJFjR&_nc_oc=AdkAulnSkpM_PYU8ya4LmfHSuz_8dfr345vGsPkcM8CFrve6YAlw2cyqW46aHNSRMAqN26-P-8sZ5dOwVcfCi8kD&_nc_zt=23&_nc_ht=scontent.fsgn2-9.fna&_nc_gid=68cxEUOYf8i_MFL0wH5Uug&oh=00_AfmAGlhBrdoyDUYQhzN9G6gRjOoFCVNywX2mUFwoe2NIJQ&oe=69517905" alt="Logo Vietnam Surftrip">
+                </a>
+            </div>
+            <nav class="desktop-menu">
+                <ul class="nav-list">
+                    <li class="nav-item highlight"><a href="#" title="Ưu đãi hôm nay">Ưu đãi hôm nay</a></li>
+                    <li class="nav-item"><a href="#" title="Dịch vụ">Dịch vụ</a></li>
+                    <li class="nav-item"><a href="#" title="About us">About us</a></li>
+                    <li class="nav-item"><a href="#" title="Book now">Book now</a></li>
+                </ul>
+                <div class="lang-switcher desktop-only" id="lang-switcher">
+                    <div class="lang-current">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        <span>EN</span>
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item">VI</a><a href="#" class="dropdown-item">EN</a><a href="#" class="dropdown-item">RU</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="mobile-controls">
+                 <div class="lang-switcher" id="mobile-lang">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    <div class="dropdown-menu" style="right: -50px;"><a href="#" class="dropdown-item">VI</a><a href="#" class="dropdown-item">EN</a><a href="#" class="dropdown-item">RU</a></div>
+                 </div>
+                <div class="hamburger" id="hamburger-btn">
+                    <span class="line"></span><span class="line"></span><span class="line"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu-overlay" id="mobile-menu">
+        <ul class="mobile-nav-list">
+            <li class="nav-item highlight"><a href="#" title="Ưu đãi hôm nay">Ưu đãi hôm nay</a></li>
+            <li class="nav-item"><a href="#" title="Dịch vụ">Dịch vụ</a></li>
+            <li class="nav-item"><a href="#" title="About us">About us</a></li>
+            <li class="nav-item"><a href="#" title="Book now">Book now</a></li>
+        </ul>
+    </div>
+
+    <!-- Section 1: Hero -->
+    <!-- Section 1: Hero Video -->
+    <section class="hero-section">
+        <!-- 
+           autoplay: Tự động chạy
+           muted: Tắt tiếng (Bắt buộc để trình duyệt cho phép tự chạy)
+           loop: Lặp lại liên tục
+           playsinline: Chạy ngay trên nền iOS thay vì bung full màn hình player
+        -->
+        <video class="hero-video" autoplay muted loop playsinline>
+            <!-- Thay đường dẫn video máy tính của bạn vào đây. Ví dụ: videos/surf-intro.mp4 -->
+            <source src="1.mp4" type="video/mp4">
+            
+            <!-- Link dự phòng online để bạn test nếu chưa có file local -->
+            <!-- <source src="https://videos.pexels.com/video-files/5047879/5047879-uhd_2560_1440_25fps.mp4" type="video/mp4"> -->
+            
+            Trình duyệt của bạn không hỗ trợ thẻ video.
+        </video>
+
+        <!-- (Optional) Nếu muốn thêm chữ đè lên video thì bỏ comment dòng dưới -->
+        <!-- <div class="hero-content-overlay"><h1>WELCOME TO PARADISE</h1></div> -->
+    </section>
+
+    <!-- Section 2: About / Vietnam Surftrip -->
+    <section class="section-about">
+        <div class="container-wide">
+            
+            <!-- Left Column: Content -->
+            <div class="about-text">
+                <h2>VIETNAM SURFTRIP</h2>
+                <h3>MUI NE • COASTAL VIBES</h3>
+                
+                <div class="text-content-wrapper">
+                    <p>
+                        Hơn cả một bộ môn thể thao, lướt sóng tại Mũi Né là cách chúng ta học cách khiêu vũ cùng đại dương. Tại Vietnam Surftrip, chúng tôi không chỉ dạy bạn cách đứng vững trên ván, mà còn mời bạn hòa mình vào nắng gió nhiệt đới, nơi nhịp sống của làng chài hòa quyện cùng tiếng sóng vỗ. Đây là nơi bạn tạm gác lại những âu lo thường nhật để tìm thấy sự tự do nguyên bản nhất của chính mình.
+                    </p>
+                    <p>
+                        Vietnam Surftrip được sinh ra từ tình yêu thuần khiết với biển cả và con người nơi đây. Dù bạn đến để chinh phục con sóng đầu đời hay đơn giản là tìm một chiếc ván tốt để thỏa đam mê, chúng tôi luôn chào đón bạn như một người thân trở về nhà. Một cộng đồng nhỏ, chân thành, trân trọng thiên nhiên và luôn sẵn sàng sẻ chia những khoảnh khắc tuyệt vời nhất của mùa sóng 2026 sắp tới.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Column: Images & SVG -->
+            <div class="about-images">
+                <div class="img-wrapper">
+                    <!-- SVG Decoration 1: Top Right -->
+                    <svg class="hand-drawn-svg svg-top-right" viewBox="0 0 392 325" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M346.604.346c-11.632-.26-16.59 1.237 0 0m-19.793.04c-10.31 1.095-31.193 1.59-29.782.77-9.378-.123-22.705.055-31.887.174-20.522-.028-39.545.56-57.853.638-30.05.277-60.122.547-90.138 1.792-.461-.536-18.724.945-15.65.955-10.97.92-3.495.08-6.223-.442-14.405.63-28.738 1.393-43.147 2.184 14.08-1.04-18.261.09-13.05 1.093-9.107-.835-31.903 1.168-35.649 1.242 9.209-.852 5.38-1.77 7.875.065 17.34 1.262 37.602-1.695 51.789-.8 38.98-1.273 78.023-2.643 117.017-2.746-4.246-1.174 20.437-.636 20.729-.4 19.719-.068 39.501-.064 59.185-.894 11.456-.808-.376.39 8.736-.001 35.003 1.417 70.128-2.03 105.057 1.066 19.512-1.232-1.734 20.195-.244 31.556-4.682 16.713 1.394 33.142 4.982 49.304 3.623 20.536 5.165 41.229 5.205 62.04-.99 10.292.519 12.522.56 7.954.993 8.066-.177 19.45-.622 4.388-1.682-5.982.805 16.36.975 13.134-.8 20.941 1.1 42.14.04 63.246 1.5 8.474-.209 12.697.638 14.153.198 17.055.358 22.387.75 38.822-1.351 2.2 2.575 24.504.735 5.054-.73-6.324-.206-11.127.255-1.973.63-11.598-1.074-21.015.003-22.8 1.059-9.508-.8-38.4.487-35.275 1.15 9.837.091-16.224-.222-20.658-.272-13.839.894-16.248-.155-33.843.134-24.633 1.413-49.492-1.9-73.969 1.467-4.561-2.993-28.863-6.674-40.806-3.296-8.867-1.387-18.66-.376-28.18 1.363-12.085 7.396-20.913 9.639-33.01-8.904-1.693-33.075-3.147-11.302-1.666 23.53 2.53-16.793-3.423-22.334-1.071-7.707-.264 20.276.877 2.865.83-11.471-.268-.712-.81-11.54-.518-10.67-.296-2.503.526-10.007.195 9.74-.893-8.06-.23-.098-.725-3.929-1.056-.74-.565-10.193-.461-.835-.645 3.588-.15 1.524-.416m59.59 109.62c.25 1.476.221 1.303 0 0m.917 161.271c.068 1.923.051 1.449 0 0m-1.78 22.035.001.76zm.005.776-.046.373zm-3.271-175.453-.036-.192zM202.465 4.9l-.096.026zM66.55 5.48l.328-.063zM349.31.453c-6.005.203 6.127.127 0 0M315.033.6l-2.97.055zm-12.752.035c5.528-.03 4.114.18 0 0m14.215.017-2.78.184zm37.815.172-2.974.074zm-34.758.028c-4.245.002-5.748.229 0 0m23.336.154c-7.544 1.477 5.732.142 0 0m4.916.34c-7.33.45 6.289.252 0 0m27.892.193c.932.836 3.058-.074 0 0m-32.472.08.962.055zm11.646.137c5.024.465 4.79-.234 0 0m-2.637.207c4.909.395 4.81-.185 0 0m-190.35.463c-1.844.008-1.181.005 0 0m218.073.095c1.504.208 1.29.178 0 0m1.395.147 3.534.318zm-257.764.412c-4.348.74 3.02.066 0 0m-2.834.137.133.03zm149.799.814c-4.496.165 3.347.574 0 0m119.467.239-1.087 3.058zm-206.03.482-.815.1zm-2.426.12-1.064.042zM19.114 7.644c-3.345.112 2.856.352 0 0m368.538 1.972-.56 1.404Zm-1.408 1.502c-3.07 10.708-1.628 6.978 0 0m-2.619 7.332c-1.128 2.72-1.417 3.727 0 0m-1.865 7.57c-2.22 2.683.41 1.619 0 0m-.81 2.502-.097.663zm-.147.706-.043.244zm-.043.246c-.926.342.696 1.38 0 0m-1.957 7.021-.52.974zm-.68 2.57c-1.198 2.814.723 1.515 0 0m3.254 67.186c.235 1.928.182 1.492 0 0m1.588 26.15c-1.126 1.91 1.624 1.904 0 0m-.065 11.926.047.428zm.842.088-.08 1.398zm-.838.34c.155 1.894.112 1.372 0 0m.117 1.435.037.377zm.032.391c.179 2.197.41 5.048 0 0m.174 9.12c-.058 1.833-.036 1.14 0 0m.962 23.9-.04.271zm.092.427c-.668.59.534.593 0 0m.487 8.535.006.946zm.006.946c.007 1.797.004.92 0 0m.279 11.523c.198 3.673-.291 10.378-.114 2.814zm.002.215c-.114 1.86-.077 1.252 0 0m-.867 3.725c-.156 2.64.467 8.216.167 2.327zm.972 8.076-.04.636zm-.107 5.06v.155zm.012 10.735.093.877zm-.256 1.115.02.182zm-.082 10.748.555 3.656zm3.101.563c-.315 2.762.748 8.8.278 2.523zm-3.035 3.675c-1.288 3.1.629 4.438 0 0m2.623 2.83c-.767 5.275 1.3 5.782 0 0m-2.361 5.159c.38.09.146 3.86.401.242zm2.281 3.898.043.145zm.715 1.727.19 2.954zm-3.096.96c-1.33 7.257.456 2.591 0 0m.36 1.016c-.972.264.987 1.382 0 0m-.295 2.735c-.104 3.251-.169 5.276 0 0m3.213 4.832-.069 2.566zm-2.875 9.224.105 2.927zm2.316 19.717.007 1.417zm-1.725.436c-.87 6.26.96 6.941 0 0m1.143 6.916c-.707 3.833.388 7.83.101.475zm-.143 6.984c-.438 5.956 1.289 7.313 0 0m-.568 1.283.173 2.966zm.223.242.242 1.737zm.21 6.463-.038.977zm-.038.977.1 1.665z"></path>
+                    </svg>
+
+                    <!-- Back Image (Vertical/Portrait) -->
+                    <img src="https://scontent.fsgn2-7.fna.fbcdn.net/v/t51.82787-15/567093604_17926654278112662_2638003876329060446_n.jpg?_nc_cat=108&amp;ccb=1-7&amp;_nc_sid=127cfc&amp;_nc_ohc=al8xrkZ8PP0Q7kNvwG-GJTu&amp;_nc_oc=Adn8jRtEjbG1YB45ddUwprgy3Hfuzbfnufq4L7Rnvcv3OMgXmgivKNCgX6yFmaTv6_9421MnDQVtOCPrHZ7H83k2&amp;_nc_zt=23&amp;_nc_ht=scontent.fsgn2-7.fna&amp;_nc_gid=xc1XZ_GPbLt2HHt6D3zo-Q&amp;oh=00_AfkoZGx1FBFJGw2vexIlSomAYyFZCPiPE0YFs0dJ43A0lA&amp;oe=69517CB6" class="img-back" alt="Mui Ne Beach">
+
+                    <!-- Front Image (Horizontal/Landscape) -->
+                    <img src="https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/590073719_122233641056116872_9089487645605616043_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_ohc=LQKoWAkRl40Q7kNvwFaSD5i&_nc_oc=AdmQVAxT6buI1q4NhNTnIw6YJ8qzwGkgY3dtWbxEPOKmb-E5z8uEQR6GdoWGgVqK0kSmIrMHR4AdnV_-jlASbBHP&_nc_zt=23&_nc_ht=scontent.fsgn2-7.fna&_nc_gid=515PcqBTS8iaZxNxuTH6vA&oh=00_AflyKPkfUP80R0uzROyW5NOSKDPPE-xBMY_i1lV9J94OhQ&oe=695167D3" class="img-front" alt="Surfing Action">
+
+                    <!-- SVG Decoration 2: Bottom Left -->
+                    <svg class="hand-drawn-svg svg-bottom-left" viewBox="0 0 270 223" xmlns="http://www.w3.org/2000/svg">
+                        <path d="m3.3-.002.07 1.156zm.071 1.164-.03.676zm-.336 2.174c-.535 4.343.717 3.466 0 0m.49.994.07 2.063zm-.275.717.201 1.024ZM3.127 7.92c-.89 5.317.77 3.61 0 0m.582 4.434c-.553 3.812 1.344 5.136 0 0m-.522.042c-1.015 1.624 1.063 13.787-.22 8.363-.505 5.585 1.132 15.526-.22 14.951-.178 8.291.64 30.648-.595 23.741-.279 9.252 1.358 20.892.178 23.52.144 8.569.263 21.02-.06 31.165.327 11.779-.64 23.644 1.353 35.321-1.084 1.016 1.41 17.9 3.527 24.623 2.316 6.871 3.032 16.702 1.698 16.932-.69 11.09-2.7 13.58-5.312 22.902-9.455 8.29 8.873 7.218 10.958 7.906-4.345-.374-17.563-2.11-6.2-.302 8.069 1.503 25.577.487 10.804.15-1.715-.122 3.567-.453 8.723.178-6.96.016 13.015.29 6.414-.112 7.069-.131-2.79.664 5.291.484-4.244-.212 3.083.485-1.284.688 5.772.155 20.882-1.23 25.447-.336 9.58.195 15.83-.08 23.317-.053 10.308-.101 20.638.12 30.948-.184 9.584-.2 25.558.071 37.586-.231 10.455-.046 32.34-.906 33.802-.459 2.306-.461 14.48-.639 7.659-.742 1.51.048 12.662-1.02 5.587-.07 10.424.403 20.884-.813 31.338-1.094-10.742.732 10.214-.05 10.38-.64 2.396.359 21.292-.654 23.348-.802-8.726-.044-19.712-.459-29.834.2-30.81.493-61.641 1.663-92.45 1.583 4.007.795-17.179.4-13.284.132-15.934.128-31.922-.042-47.818.62 7.844-.436-10.996-.021-14.128-.332-21.924-1.075-44.085 2.062-65.818-1.95 7.106-14.985 11.585-32.593 5.197-48.643C6.421 157.378 5.97 144.63 4.95 131.98c-.746-6.847.45-23.037-.358-16.74-.678-5.715-.14-13.682.472-3.135.189.97-.063-10.025-.885-8.88 1.028-14.931-.52-29.852.304-44.85-.298-7.905-.778-9.53-.315-20.573-.316-3.266-1.014-11.944-.064-14.848-.197-4.294-.955-8.178-.917-10.557m.946 7.49v-.521zm-.002-.53.032-.265zM5.77 140.868l.023.133zm124.074 79.406.067-.016zm94.095.086-.226.041zM2.881 146.828c-.168-1.021-.149-.905 0 0m-.06-111.69c-.04-1.33-.031-1 0 0m-.092-19.005-.114 1.007zm1.41 12.777.064 2.042zm-1.912 6.64-.055 1.766zm2.236 3.03c-.085 2.244-.139 3.657 0 0m.166 2.197c-.859 1.64.49 5.406 0 0m-2.483 1.12.122 2.046zm2.024.232c-.725.727.864.391 0 0m-1.441 2.914.03.105zm1.439 1.289c-.514 2.34.23 1.127 0 0m-1.502 1.352c-1.388 5.104 1.24 2.75 0 0m1.996 3.58c-.87 2.346.388 2.884 0 0m-2.547.537c-.24 4.302.816 3.83 0 0m2.055 1.943.338 2.529zm-.004 10.18.066.607zM4.139 75.03l-.032.442zm.468 2.125c-.126 1.883.302 5.85.112 1.656zm-.345 1.084c.133 5.17-.291 5.213 0 0m-.063 4.477c-.084 1.288-.056.867 0 0m.092 8.342v.718zm0 .718v.655zm.342 6.256-.036.311zm.056.418-.029.188zm.584 15.88c-.045 1.269-.028.789 0 0m-.093 5.235c.117 1.53.27 3.53 0 0m.15 1.963.011.253zm.02.252c.1 1.313.072.953 0 0m-.446.256-.059.97zm.49.74.032.295zm-.183 7.47c-.562 1.809.807.858 0 0m1.012 18.146c.155 1.335.12 1.032 0 0m2.267 46.351c-.88.791.701 2.316 0 0m-.244 2.346-.367.671zm-1.656 5.066-.08.452zm-.092.463-.03.154zm-.066.201-.068.457zm.035.729-.644 1.353zm-1.346 5.027c-3.206 3.301.966 1.257 0 0m-.676.465c-1.579 3.974-2.057 8.728 0 0m-2.27 6.123-.53 1.094zm-1.41 2.727-.732 2.065zm255.538.998 1.038.079zm-111.28 1.451-.642.034zm-.716.031-2.629.039zm-61.725.096c-1.47.222 2.943-.049 0 0m-79.21.463c4.397.64 1.338-.047 0 0m2.85.254c1.034.148.901.129 0 0m179.05.402c-4.53.129 1.643.43 0 0M8.43 221.67c3.076.64.254.063 0 0m14.297.004c3.5.257 3.227-.12 0 0m163.587.04.092.019zm-166.052.04c5.724.33 3.802-.046 0 0m10.035.244c-3.786-.262-2.85.416.115.131zm1.414.006.673.043zm.783.026c-1.802.876 2.671-.045 0 0m125.436.105h.888zm-132.733.358c2.907 0 .609 0 0 0m12.752.021c-9.49-.079-7.875 1.027 0 0m12.967.086-1.568.053zm2.39.084-2.37.087zm-26.331.084c2.614 0 3.267 0 0 0m31.677.002c-3.216.066 5.2.109 0 0m-4.884.04-1.51.044z"></path>
+                    </svg>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Section 3: Benefits -->
+    <section class="section-benefits">
+        <div class="benefits-container">
+            
+            <!-- Item 1: Safety -->
+            <div class="benefit-card hidden-element" style="--delay: 0s;">
+                <div class="icon-box">
+                    <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C12 22 20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3>An Toàn Tuyệt Đối</h3>
+                <p>Đội ngũ huấn luyện viên đạt chuẩn quốc tế với quy trình giám sát nghiêm ngặt, đảm bảo tỷ lệ an toàn 100% cho mọi học viên.</p>
+            </div>
+
+            <!-- Item 2: Equipment -->
+            <div class="benefit-card hidden-element" style="--delay: 0.2s;">
+                <div class="icon-box">
+                    <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 2V22C8 22 10 20 12 20C14 20 16 22 16 22V2C16 2 14 4 12 4C10 4 8 2 8 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M5 22H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3>Ván Chuẩn Lướt Sóng</h3>
+                <p>BST hơn 20 mẫu ván từ Longboard đến Shortboard. Tất cả đều được bảo dưỡng hàng ngày để mang lại trải nghiệm lướt hoàn hảo.</p>
+            </div>
+
+            <!-- Item 3: Location -->
+            <div class="benefit-card hidden-element" style="--delay: 0.4s;">
+                <div class="icon-box">
+                    <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8 21H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3>Vị Trí Phù hợp</h3>
+                <p>Bước chân là chạm sóng. Bãi tập riêng biệt, tránh xa đám đông du lịch, giúp bạn tập trung tối đa vào kỹ thuật.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Section 4: Gallery CTA -->
+    <section class="section-gallery-cta">
+        <div class="cta-container">
+            
+            <!-- 2 Parallel Images -->
+            <div class="cta-images-wrapper">
+                <div class="cta-img-box">
+                    <img src="img1.png" alt="Surfing Mui Ne 1">
+                </div>
+                <div class="cta-img-box">
+                    <img src="img2.png" alt="Surfing Mui Ne 2">
+                </div>
+            </div>
+
+            <!-- Text & Button -->
+            <div class="cta-text-content">
+                <p>
+                    Đừng chần chừ thêm nữa, đang là mùa sóng đẹp nhất ở Mũi Né ngay tại Bãi Ông Địa. 
+                    Hãy gọi cho chúng tôi ngay để không bỏ lỡ những con sóng tuyệt đẹp <br>và nhận thông tin chi tiết về ưu đãi Discount Early Bird cho đầu năm 2026.
+                </p>
+                
+                <a href="#" class="btn-book-brush">BOOK NOW</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Section 5: Sustainability (Horizontal Scroll) -->
+    <section class="section-sustainability">
+        <div class="scroll-container" id="scroll-container">
+            
+            <!-- Column 1: Intro Text -->
+            <div class="scroll-item text-intro">
+                <p class="main-desc">
+                    Tại Vietnam Surftrip, chúng tôi ưu tiên trải nghiệm, niềm vui sướng và sự hạnh phúc của khách hàng là trên hết. Đặt vào đó làm thước đo hàng đầu nên chúng tôi luôn muốn khách du lịch đến với Mũi Né sẽ luôn ra về với 3 đến 5 con sóng mình đã cưỡi. Hãy xem những khách hàng hạnh phúc nói gì về chúng tôi.
+                </p> 
+                <div class="drag-instruction">
+                    <div class="drag-icon">
+                        <svg viewBox="0 0 53 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M52.707 8.707a1 1 0 0 0 0-1.414L46.343.929a1 1 0 1 0-1.414 1.414L50.586 8l-5.657 5.657a1 1 0 0 0 1.414 1.414l6.364-6.364ZM0 9h52V7H0v2Z" fill="#000"></path></svg>
+                    </div>
+                    <p>CLICK VÀ KÉO ĐỂ XEM TIẾP</p> 
+                </div>
+            </div>
+
+            <!-- Column 2: Landscape Image + Post-it -->
+            <div class="scroll-item landscape">
+                <div class="image-wrapper">
+                    <img src="https://scontent.fsgn2-6.fna.fbcdn.net/v/t51.82787-15/556131965_17924867103112662_1805752389853215227_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_ohc=zqkcuPfadR4Q7kNvwE5g1Ax&_nc_oc=AdkEZapFAAwV7_iDsKoR_dE9k21Ob6LRyOhkr5XdoxCa-OEgdZQrIn2GPYlgctGWoKJTQf4Kv97lzuDrhXh7N74G&_nc_zt=23&_nc_ht=scontent.fsgn2-6.fna&_nc_gid=F4wZ1vWqW7CD3WZIqCu7cA&oh=00_AfmQnmRO9tbvTx2nH65ldSOwjrCwSrVIPJMtkpEqvu3MQQ&oe=69517093&fit=crop" alt="Sustainable Architecture">
+                </div>
+                <div class="post-it-note note-bottom-right rotate-right">
+                    <p>Cảm giác phê không tưởng, thầy dạy siêu có tâm!</p>
+                </div>
+            </div>
+
+            <!-- Column 3: Portrait Image + Post-it -->
+            <div class="scroll-item portrait">
+                <div class="post-it-note note-top-left rotate-left">
+                    <p>"Tụi con cũng lướt sóng được rồi nè."</p>
+                </div>
+                <div class="image-wrapper">
+                    <img src="https://scontent.fsgn2-4.fna.fbcdn.net/v/t51.82787-15/587805291_17931650823112662_7900749514479883285_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=127cfc&_nc_ohc=xu1mXHWPZOwQ7kNvwE8xOh8&_nc_oc=AdmHlWqJPuRdc_uiQrV6zij2SMPOsfphM3eOrJA7AgK4a4REcPc0twE-HX4Qp-K-HMKy1kAf0m5OddZGHH8VZxeO&_nc_zt=23&_nc_ht=scontent.fsgn2-4.fna&_nc_gid=XeFDKf-hxIXR1UGUQWTqvA&oh=00_AfllJoMIyMHtujxh6Jv4RTY2H_iYw6Yo__kebfFJkfMRMA&oe=69516A81&fit=crop" alt="Protect Environment">
+                </div>
+            </div>
+
+            <!-- Column 4: Landscape Image + Post-it -->
+            <div class="scroll-item landscape">
+                <div class="image-wrapper">
+                    <img src="https://scontent.fsgn2-6.fna.fbcdn.net/v/t51.82787-15/546658219_17922463347112662_8354659558268860340_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_ohc=OctbguaQG8sQ7kNvwFHA6k5&_nc_oc=AdmqouzYQSl0lXlIIZKE6KVq70a3txi3Q5Jzs3utrtte9KuU0KQRbmnYSU9oLAUic3peR46r3-rxVdW0FKp-fokb&_nc_zt=23&_nc_ht=scontent.fsgn2-6.fna&_nc_gid=h-SMPA-vWNTKf9GxjNLZyg&oh=00_Afl3ZbJ8BeLdRj29Vzatfhda_sb7z-2x5-0RKhb6amPbXQ&oe=695181D1&fit=crop" alt="Glamping Tents">
+                </div>
+                <div class="post-it-note note-bottom-left rotate-right">
+                    <p>Không gì đã bằng cảm giác đứng trên sóng. May quá không chần chừ, cứ sợ không làm được mấy năm rồi</p>
+                </div>
+            </div>
+
+            <!-- Column 5: Portrait Image + Post-it -->
+            <div class="scroll-item portrait">
+                <div class="post-it-note note-top-right rotate-left">
+                    <p>"We thank you!!"</p>
+                </div>
+                <div class="image-wrapper">
+                    <img src="https://scontent.fsgn2-11.fna.fbcdn.net/v/t51.82787-15/539533749_17920619088112662_5327949671939086936_n.jpg?stp=dst-jpegr_tt6&_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_ohc=fi_HGTyIHH4Q7kNvwFVCMZ2&_nc_oc=AdnDlPifbKFabsj5_jOpcEjGnWBS5ZPMbySfjWXMYun1gIc-XeWleDnIt5KkKwlOOOBp4Dq6NUJL8zW5SlhXjyT2&_nc_zt=23&se=-1&_nc_ht=scontent.fsgn2-11.fna&_nc_gid=ACKQ1TNdfYKVjAo-XdDSSA&oh=00_AfnA7YFNXqB62LI1B9GD0rHSjEbAEt4mG-Bvu3gCN1IEvA&oe=69517E93&fit=crop" alt="Community Action">
+                </div>
+            </div>
+
+            <!-- Column 6: Final Call to Action -->
+            <div class="scroll-item text-final">
+                <p>Bạn có muốn một phần đồng hành cùng chúng tôi, hãy gặp những coach siêu có tâm của chúng tôi ngay hôm nay nhé</p>
+                
+                <a href="#" class="circle-btn">
+                    <span>CALL US<br>NOW</span>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- JS Handling -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.getElementById('main-header');
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileLang = document.getElementById('mobile-lang');
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) header.classList.add('scrolled');
+                else header.classList.remove('scrolled');
+            });
+
+            hamburgerBtn.addEventListener('click', () => {
+                hamburgerBtn.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+            });
+
+            mobileLang.addEventListener('click', (e) => {
+                e.stopPropagation();
+                mobileLang.classList.toggle('active');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!mobileLang.contains(e.target)) mobileLang.classList.remove('active');
+            });
+        });
+
+        // --- Intersection Observer for Scroll Animation ---
+            const observerOptions = {
+                threshold: 0.15, // Kích hoạt khi thấy 15% phần tử
+                rootMargin: "0px 0px -50px 0px" // Offset một chút để không kích hoạt quá sớm
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('show');
+                        observer.unobserve(entry.target); // Chỉ chạy 1 lần
+                    }
+                });
+            }, observerOptions);
+
+            const hiddenElements = document.querySelectorAll('.hidden-element');
+            hiddenElements.forEach((el) => observer.observe(el));
+
+        // --- DRAG TO SCROLL FUNCTIONALITY ---
+            const slider = document.getElementById('scroll-container');
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            slider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                slider.classList.add('active'); // CSS class active có thể thêm hiệu ứng cursor
+                startX = e.pageX - slider.offsetLeft;
+                scrollLeft = slider.scrollLeft;
+            });
+
+            slider.addEventListener('mouseleave', () => {
+                isDown = false;
+                slider.classList.remove('active');
+            });
+
+            slider.addEventListener('mouseup', () => {
+                isDown = false;
+                slider.classList.remove('active');
+            });
+
+            slider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault(); // Ngăn chặn bôi đen text khi kéo
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX) * 2; // Tốc độ kéo (nhân 2 để nhanh hơn)
+                slider.scrollLeft = scrollLeft - walk;
+            });
+    </script>
+</body>
+</html>

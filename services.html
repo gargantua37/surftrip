@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-vi="Dịch Vụ - Vietnam Surftrip" data-lang-en="Services - Vietnam Surftrip">Dịch Vụ - Vietnam
+        Surftrip</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Roboto:wght@300;400;700;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --- GLOBAL & VARIABLES --- */
+        :root {
+            --wp--style--global--content-size: 823px;
+            --wp--style--global--wide-size: 1080px;
+            --primary-brush-color: rgb(0, 208, 130);
+            --header-height-expanded: 115px;
+            --header-height-collapsed: 70px;
+            --font-main: 'Roboto', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        a,
+        button,
+        .hamburger,
+        .lang-switcher {
+            cursor: pointer;
+        }
+
+        body {
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            color: #252525;
+            line-height: 1.6;
+            background-color: #fff;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* --- HEADER --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height-expanded);
+            background-color: #fff;
+            z-index: 1000;
+            transition: height 0.3s ease-in-out, box-shadow 0.3s ease;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header.scrolled {
+            height: var(--header-height-collapsed);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: var(--wp--style--global--wide-size);
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .logo a {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+            transition: height 0.3s ease;
+            display: block;
+        }
+
+        header.scrolled .logo img {
+            height: 40px;
+        }
+
+        /* Menu */
+        .desktop-menu {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-list {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-item a {
+            text-transform: uppercase;
+            font-weight: 300;
+            font-size: 14px;
+            transition: font-weight 0.1s ease;
+            position: relative;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .nav-item a::before {
+            display: block;
+            content: attr(title);
+            font-weight: 700;
+            height: 0;
+            overflow: hidden;
+            visibility: hidden;
+        }
+
+        .nav-item a:hover {
+            font-weight: 700;
+        }
+
+        .nav-item.highlight a {
+            position: relative;
+            padding: 5px 10px;
+            color: #fff;
+            z-index: 1;
+        }
+
+        .nav-item.highlight a::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary-brush-color);
+            z-index: -1;
+            clip-path: polygon(3% 10%, 98% 5%, 100% 88%, 95% 95%, 2% 98%, 0% 15%);
+            transform: scale(1.1) rotate(-1deg);
+            border-radius: 4px;
+            transition: transform 0.2s;
+        }
+
+        .nav-item.highlight a:hover::after {
+            transform: scale(1.15) rotate(0deg);
+        }
+
+        /* Lang Switcher */
+        .lang-switcher {
+            position: relative;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 300;
+            font-size: 14px;
+            gap: 5px;
+            padding: 10px 0;
+        }
+
+        .lang-current {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .lang-current:hover {
+            font-weight: 700;
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: black;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            padding: 10px 0;
+            min-width: 80px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            text-align: center;
+            z-index: 1001;
+        }
+
+        .lang-switcher:hover .dropdown-menu,
+        .lang-switcher.active .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 8px 15px;
+            font-size: 14px;
+            font-weight: 300;
+            transition: background 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
+            font-weight: 700;
+        }
+
+        /* Mobile Controls */
+        .mobile-controls {
+            display: none;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 24px;
+        }
+
+        .line {
+            width: 100%;
+            height: 2px;
+            background-color: black;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-overlay {
+            position: fixed;
+            top: var(--header-height-expanded);
+            left: 0;
+            width: 100%;
+            background-color: white;
+            height: 0;
+            overflow: hidden;
+            transition: height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 0;
+            z-index: 999;
+        }
+
+        header.scrolled~.mobile-menu-overlay {
+            top: var(--header-height-collapsed);
+        }
+
+        .mobile-menu-overlay.active {
+            height: 300px;
+            padding-top: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .mobile-nav-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .mobile-nav-list li a {
+            font-size: 16px;
+            text-transform: uppercase;
+            display: block;
+            padding: 10px;
+        }
+
+        .hamburger.active .line:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+
+        .hamburger.active .line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active .line:nth-child(3) {
+            transform: translateY(-6px) rotate(-45deg);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: var(--header-height-expanded);
+            padding: 120px 20px 80px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: var(--font-serif);
+            font-size: 72px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Services Section */
+        .services-section {
+            padding: 100px 20px;
+            background: #fff;
+        }
+
+        .section-title {
+            font-family: var(--font-main);
+            font-weight: 900;
+            font-size: 48px;
+            text-align: center;
+            color: #000;
+            text-transform: uppercase;
+            margin-bottom: 60px;
+        }
+
+        /* Surfboard Hire */
+        .boards-grid {
+            max-width: 1200px;
+            margin: 0 auto 120px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .board-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .board-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .board-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .board-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 208, 130, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+        }
+
+        .board-card h3 {
+            font-family: var(--font-serif);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #000;
+        }
+
+        .board-specs {
+            list-style: none;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .board-specs li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .board-price {
+            font-family: var(--font-serif);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-brush-color);
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .price-note {
+            font-size: 14px;
+            color: #999;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        /* Coaching Section */
+        .coaching-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .coaching-card {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border-radius: 16px;
+            padding: 50px 40px;
+            border: 2px solid transparent;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        .coaching-card.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .coaching-card:hover {
+            border-color: var(--primary-brush-color);
+            transform: scale(1.02);
+        }
+
+        .coaching-card.featured {
+            background: linear-gradient(135deg, var(--primary-brush-color) 0%, #00c878 100%);
+            color: #fff;
+        }
+
+        .coaching-card h3 {
+            font-family: var(--font-serif);
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .coaching-subtitle {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .coaching-features {
+            list-style: none;
+            margin: 30px 0;
+        }
+
+        .coaching-features li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 16px;
+        }
+
+        .coaching-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+            color: var(--primary-brush-color);
+        }
+
+        .coaching-card.featured .coaching-features li::before {
+            color: #fff;
+        }
+
+        .coaching-price {
+            font-family: var(--font-serif);
+            font-size: 48px;
+            font-weight: 700;
+            text-align: center;
+            margin: 30px 0 20px;
+        }
+
+        .btn-book {
+            display: block;
+            width: 100%;
+            padding: 18px 30px;
+            background: #000;
+            color: #fff;
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-book:hover {
+            background: var(--primary-brush-color);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .coaching-card.featured .btn-book {
+            background: #fff;
+            color: var(--primary-brush-color);
+        }
+
+        .coaching-card.featured .btn-book:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: 300;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-brush-color);
+        }
+
+        @media (max-width: 768px) {
+            .desktop-menu {
+                display: none;
+            }
+
+            .mobile-controls {
+                display: flex;
+            }
+
+            .lang-switcher.desktop-only {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .hero {
+                padding: 80px 20px 60px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .coaching-container {
+                grid-template-columns: 1fr;
+            }
+
+            .boards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hidden-element {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .hidden-element.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header id="main-header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="https://scontent.fsgn2-9.fna.fbcdn.net/v/t39.30808-6/511071638_122211521756116872_3227246048032558223_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=vulpcKhnbocQ7kNvwGjJFjR&_nc_oc=AdkAulnSkpM_PYU8ya4LmfHSuz_8dfr345vGsPkcM8CFrve6YAlw2cyqW46aHNSRMAqN26-P-8sZ5dOwVcfCi8kD&_nc_zt=23&_nc_ht=scontent.fsgn2-9.fna&_nc_gid=68cxEUOYf8i_MFL0wH5Uug&oh=00_AfmAGlhBrdoyDUYQhzN9G6gRjOoFCVNywX2mUFwoe2NIJQ&oe=69517905"
+                        alt="Logo Vietnam Surftrip">
+                </a>
+            </div>
+            <nav class="desktop-menu">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="index.html" data-lang-vi="Trang chủ" data-lang-en="Home">Trang chủ</a>
+                    </li>
+                    <li class="nav-item highlight"><a href="services.html" data-lang-vi="Dịch vụ"
+                            data-lang-en="Services">Dịch vụ</a></li>
+                    <li class="nav-item"><a href="about.html" data-lang-vi="Về chúng tôi" data-lang-en="About us">Về
+                            chúng tôi</a></li>
+                    <li class="nav-item"><a href="tel:+84849994571" data-lang-vi="Liên hệ" data-lang-en="Contact">Liên
+                            hệ</a></li>
+                </ul>
+                <div class="lang-switcher desktop-only" id="lang-switcher">
+                    <div class="lang-current">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                        </svg>
+                        <span id="current-lang-desktop">VI</span>
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M7 10l5 5 5-5z" />
+                        </svg>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item" data-lang="vi">VI</a><a href="#" class="dropdown-item"
+                            data-lang="en">EN</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="mobile-controls">
+                <div class="lang-switcher" id="mobile-lang">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                    </svg>
+                    <div class="dropdown-menu" style="right: -50px;"><a href="#" class="dropdown-item"
+                            data-lang="vi">VI</a><a href="#" class="dropdown-item" data-lang="en">EN</a></div>
+                </div>
+                <div class="hamburger" id="hamburger-btn">
+                    <span class="line"></span><span class="line"></span><span class="line"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu-overlay" id="mobile-menu">
+        <ul class="mobile-nav-list">
+            <li class="nav-item"><a href="index.html" data-lang-vi="Trang chủ" data-lang-en="Home">Trang chủ</a></li>
+            <li class="nav-item highlight"><a href="services.html" data-lang-vi="Dịch vụ" data-lang-en="Services">Dịch
+                    vụ</a></li>
+            <li class="nav-item"><a href="about.html" data-lang-vi="Về chúng tôi" data-lang-en="About us">Về chúng
+                    tôi</a></li>
+            <li class="nav-item"><a href="tel:+84849994571" data-lang-vi="Liên hệ" data-lang-en="Contact">Liên hệ</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1 data-lang-vi="Dịch Vụ Của Chúng Tôi" data-lang-en="Our Services">Dịch Vụ Của Chúng Tôi</h1>
+        <p data-lang-vi="Từ thuê ván lướt sóng chất lượng cao đến các khóa học huấn luyện chuyên nghiệp - chúng tôi có mọi thứ bạn cần để chinh phục sóng biển Mũi Né"
+            data-lang-en="From high-quality surfboard rentals to professional coaching sessions - we have everything you need to conquer the waves of Mui Ne">
+            Từ thuê ván lướt sóng chất lượng cao đến các khóa học huấn luyện chuyên nghiệp - chúng tôi có mọi thứ bạn
+            cần để chinh phục sóng biển Mũi Né</p>
+    </section>
+
+    <!-- Surfboard Hire Section -->
+    <section class="services-section">
+        <h2 class="section-title" data-lang-vi="Cho Thuê Ván Lướt Sóng" data-lang-en="Surfboard Hire">Cho Thuê Ván Lướt
+            Sóng</h2>
+        <div class="boards-grid">
+            <div class="board-card hidden-element">
+                <div class="board-icon">🏄</div>
+                <h3 data-lang-vi="Longboard" data-lang-en="Longboard">Longboard</h3>
+                <ul class="board-specs">
+                    <li data-lang-vi="📏 Kích thước: 9'0&quot; - 10'0&quot;"
+                        data-lang-en="📏 Size: 9'0&quot; - 10'0&quot;">📏 Kích thước: 9'0" - 10'0"</li>
+                    <li data-lang-vi="💪 Độ ổn định cao" data-lang-en="💪 High stability">💪 Độ ổn định cao</li>
+                    <li data-lang-vi="👥 Phù hợp: Người mới & Trung cấp"
+                        data-lang-en="👥 Suitable: Beginners & Intermediate">👥 Phù hợp: Người mới & Trung cấp</li>
+                    <li data-lang-vi="🌊 Lý tưởng cho sóng nhỏ-trung bình"
+                        data-lang-en="🌊 Ideal for small-medium waves">🌊 Lý tưởng cho sóng nhỏ-trung bình</li>
+                </ul>
+                <div class="board-price">200.000đ</div>
+                <div class="price-note" data-lang-vi="/ngày" data-lang-en="/day">/ngày</div>
+            </div>
+
+            <div class="board-card hidden-element">
+                <div class="board-icon">🏄‍♂️</div>
+                <h3 data-lang-vi="Funboard" data-lang-en="Funboard">Funboard</h3>
+                <ul class="board-specs">
+                    <li data-lang-vi="📏 Kích thước: 7'0&quot; - 8'6&quot;"
+                        data-lang-en="📏 Size: 7'0&quot; - 8'6&quot;">📏 Kích thước: 7'0" - 8'6"</li>
+                    <li data-lang-vi="⚡ Cân bằng giữa tốc độ & ổn định" data-lang-en="⚡ Balance speed & stability">⚡ Cân
+                        bằng giữa tốc độ & ổn định</li>
+                    <li data-lang-vi="👥 Phù hợp: Trung cấp" data-lang-en="👥 Suitable: Intermediate">👥 Phù hợp: Trung
+                        cấp</li>
+                    <li data-lang-vi="🌊 Linh hoạt với nhiều loại sóng" data-lang-en="🌊 Versatile for various waves">🌊
+                        Linh hoạt với nhiều loại sóng</li>
+                </ul>
+                <div class="board-price">250.000đ</div>
+                <div class="price-note" data-lang-vi="/ngày" data-lang-en="/day">/ngày</div>
+            </div>
+
+            <div class="board-card hidden-element">
+                <div class="board-icon">🏄‍♀️</div>
+                <h3 data-lang-vi="Shortboard" data-lang-en="Shortboard">Shortboard</h3>
+                <ul class="board-specs">
+                    <li data-lang-vi="📏 Kích thước: 5'8&quot; - 6'6&quot;"
+                        data-lang-en="📏 Size: 5'8&quot; - 6'6&quot;">📏 Kích thước: 5'8" - 6'6"</li>
+                    <li data-lang-vi="🚀 Tốc độ cao, khả năng xoay tốt"
+                        data-lang-en="🚀 High speed, good maneuverability">🚀 Tốc độ cao, khả năng xoay tốt</li>
+                    <li data-lang-vi="👥 Phù hợp: Nâng cao & Chuyên nghiệp" data-lang-en="👥 Suitable: Advanced & Pro">
+                        👥 Phù hợp: Nâng cao & Chuyên nghiệp</li>
+                    <li data-lang-vi="🌊 Tốt nhất cho sóng lớn" data-lang-en="🌊 Best for big waves">🌊 Tốt nhất cho
+                        sóng lớn</li>
+                </ul>
+                <div class="board-price">300.000đ</div>
+                <div class="price-note" data-lang-vi="/ngày" data-lang-en="/day">/ngày</div>
+            </div>
+
+            <div class="board-card hidden-element">
+                <div class="board-icon">🧒</div>
+                <h3 data-lang-vi="Foam Board (Trẻ em)" data-lang-en="Foam Board (Kids)">Foam Board (Trẻ em)</h3>
+                <ul class="board-specs">
+                    <li data-lang-vi="📏 Kích thước: 5'0&quot; - 6'0&quot;"
+                        data-lang-en="📏 Size: 5'0&quot; - 6'0&quot;">📏 Kích thước: 5'0" - 6'0"</li>
+                    <li data-lang-vi="🛡️ An toàn tuyệt đối với xốp mềm"
+                        data-lang-en="🛡️ Absolutely safe with soft foam">🛡️ An toàn tuyệt đối với xốp mềm</li>
+                    <li data-lang-vi="👥 Phù hợp: Trẻ em & Người mới" data-lang-en="👥 Suitable: Kids & Beginners">👥
+                        Phù hợp: Trẻ em & Người mới</li>
+                    <li data-lang-vi="🌊 Dễ học, dễ đứng" data-lang-en="🌊 Easy to learn, easy to stand">🌊 Dễ học, dễ
+                        đứng</li>
+                </ul>
+                <div class="board-price">150.000đ</div>
+                <div class="price-note" data-lang-vi="/ngày" data-lang-en="/day">/ngày</div>
+            </div>
+        </div>
+
+        <!-- Coaching Section -->
+        <h2 class="section-title" data-lang-vi="Huấn Luyện Lướt Sóng" data-lang-en="Surf Coaching">Huấn Luyện Lướt Sóng
+        </h2>
+        <div class="coaching-container">
+            <div class="coaching-card hidden-element">
+                <h3 data-lang-vi="Lớp Nhóm" data-lang-en="Group Class">Lớp Nhóm</h3>
+                <p class="coaching-subtitle" data-lang-vi="Học cùng bạn bè, vui hơn - rẻ hơn"
+                    data-lang-en="Learn with friends, more fun - cheaper">Học cùng bạn bè, vui hơn - rẻ hơn</p>
+
+                <ul class="coaching-features">
+                    <li data-lang-vi="Tối đa 4-6 người/nhóm" data-lang-en="Maximum 4-6 people/group">Tối đa 4-6
+                        người/nhóm</li>
+                    <li data-lang-vi="Thời lượng: 2 giờ" data-lang-en="Duration: 2 hours">Thời lượng: 2 giờ</li>
+                    <li data-lang-vi="Miễn phí thuê ván" data-lang-en="Free board rental">Miễn phí thuê ván</li>
+                    <li data-lang-vi="Học lý thuyết + Thực hành" data-lang-en="Theory + Practice">Học lý thuyết + Thực
+                        hành</li>
+                    <li data-lang-vi="Phù hợp người mới bắt đầu" data-lang-en="Suitable for beginners">Phù hợp người mới
+                        bắt đầu</li>
+                </ul>
+
+                <div class="coaching-price">500.000đ</div>
+                <div class="price-note" data-lang-vi="/người/buổi" data-lang-en="/person/session">/người/buổi</div>
+                <a href="tel:+84849994571" class="btn-book" data-lang-vi="Đặt Lịch Ngay" data-lang-en="Book Now">Đặt
+                    Lịch Ngay</a>
+            </div>
+
+            <div class="coaching-card featured hidden-element">
+                <h3 data-lang-vi="Huấn Luyện 1-1" data-lang-en="1-on-1 Coaching">Huấn Luyện 1-1</h3>
+                <p class="coaching-subtitle" data-lang-vi="Chương trình cá nhân hóa 100%"
+                    data-lang-en="100% personalized program">Chương trình cá nhân hóa 100%</p>
+
+                <ul class="coaching-features">
+                    <li data-lang-vi="Huấn luyện riêng 1 kèm 1" data-lang-en="Private 1-on-1 coaching">Huấn luyện riêng
+                        1 kèm 1</li>
+                    <li data-lang-vi="Thời lượng: 2 giờ" data-lang-en="Duration: 2 hours">Thời lượng: 2 giờ</li>
+                    <li data-lang-vi="Miễn phí thuê ván cao cấp" data-lang-en="Free premium board rental">Miễn phí thuê
+                        ván cao cấp</li>
+                    <li data-lang-vi="Phân tích video chuyên sâu" data-lang-en="In-depth video analysis">Phân tích video
+                        chuyên sâu</li>
+                    <li data-lang-vi="Tiến độ học cực nhanh" data-lang-en="Very fast progress">Tiến độ học cực nhanh
+                    </li>
+                    <li data-lang-vi="Phù hợp mọi trình độ" data-lang-en="Suitable for all levels">Phù hợp mọi trình độ
+                    </li>
+                </ul>
+
+                <div class="coaching-price">1.200.000đ</div>
+                <div class="price-note" data-lang-vi="/buổi" data-lang-en="/session">/buổi</div>
+                <a href="tel:+84849994571" class="btn-book" data-lang-vi="Đặt Lịch Ngay" data-lang-en="Book Now">Đặt
+                    Lịch Ngay</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html" data-lang-vi="Trang chủ" data-lang-en="Home">Trang chủ</a>
+                <a href="services.html" data-lang-vi="Dịch vụ" data-lang-en="Services">Dịch vụ</a>
+                <a href="about.html" data-lang-vi="Về chúng tôi" data-lang-en="About us">Về chúng tôi</a>
+                <a href="tel:+84849994571" data-lang-vi="Liên hệ" data-lang-en="Contact">Liên hệ</a>
+            </div>
+            <p>Vietnam Surftrip © 2020 - 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Language Switcher Logic
+            const langSwitchers = document.querySelectorAll('.lang-switcher .dropdown-item');
+            const currentLangDisplay = document.getElementById('current-lang-desktop');
+            let currentLang = localStorage.getItem('preferredLanguage') || 'vi';
+
+            function switchLanguage(lang) {
+                currentLang = lang;
+                localStorage.setItem('preferredLanguage', lang);
+                document.documentElement.lang = lang;
+                if (currentLangDisplay) currentLangDisplay.textContent = lang.toUpperCase();
+
+                document.querySelectorAll('[data-lang-vi], [data-lang-en]').forEach(el => {
+                    const viText = el.getAttribute('data-lang-vi');
+                    const enText = el.getAttribute('data-lang-en');
+                    if (lang === 'vi' && viText) {
+                        el.innerHTML = viText;
+                        if (el.hasAttribute('title')) el.setAttribute('title', viText);
+                    } else if (lang === 'en' && enText) {
+                        el.innerHTML = enText;
+                        if (el.hasAttribute('title')) el.setAttribute('title', enText);
+                    }
+                });
+            }
+
+            langSwitchers.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const selectedLang = item.getAttribute('data-lang');
+                    if (selectedLang && (selectedLang === 'vi' || selectedLang === 'en')) {
+                        switchLanguage(selectedLang);
+                        document.getElementById('lang-switcher')?.classList.remove('active');
+                        document.getElementById('mobile-lang')?.classList.remove('active');
+                    }
+                });
+            });
+
+            switchLanguage(currentLang);
+
+            // Header Scroll
+            const header = document.getElementById('main-header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) header.classList.add('scrolled');
+                else header.classList.remove('scrolled');
+            });
+
+            // Mobile Menu
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileLang = document.getElementById('mobile-lang');
+
+            hamburgerBtn.addEventListener('click', () => {
+                hamburgerBtn.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+            });
+
+            mobileLang.addEventListener('click', (e) => {
+                e.stopPropagation();
+                mobileLang.classList.toggle('active');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!mobileLang.contains(e.target)) mobileLang.classList.remove('active');
+            });
+
+            // Scroll Animations
+            const observerOptions = { threshold: 0.15, rootMargin: "0px 0px -50px 0px" };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('show');
+                        }, index * 100);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.hidden-element, .board-card, .coaching-card').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>
